@@ -48,11 +48,14 @@ const Dashboard = () => {
     const fetchData = async () => {
       try {
         const token = localStorage.getItem("token");
-        const res = await axios.get("http://localhost:3000/getLeaveInfo", {
-          headers: {
-            Authorization: `Bearer ${token}`, // if you have token based login
-          },
-        });
+        const res = await axios.get(
+          "https://ems-backend-0xxx.onrender.com/getLeaveInfo",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // if you have token based login
+            },
+          }
+        );
         console.log(res);
 
         setShowLeaveRecord(res.data.data);
@@ -82,7 +85,7 @@ const Dashboard = () => {
       console.log(currentTime);
 
       const res = await axios.post(
-        "http://localhost:3000/attendance/Checkin",
+        "https://ems-backend-0xxx.onrender.com/attendance/Checkin",
         {
           checkIn: currentTime,
         },
@@ -120,7 +123,7 @@ const Dashboard = () => {
       console.log(formattedTime);
 
       const response = await axios.post(
-        "http://localhost:3000/attendance/Checkout",
+        "https://ems-backend-0xxx.onrender.com/attendance/Checkout",
         {
           checkOut: formattedTime,
         },
@@ -150,7 +153,7 @@ const Dashboard = () => {
     try {
       const token = localStorage.getItem("token");
       const res = await axios.post(
-        "http://localhost:3000/salary",
+        "https://ems-backend-0xxx.onrender.com/salary",
         {},
         {
           headers: {
@@ -172,7 +175,7 @@ const Dashboard = () => {
     try {
       const token = localStorage.getItem("token");
       const res = await axios.post(
-        "http://localhost:3000/setdeadline",
+        "https://ems-backend-0xxx.onrender.com/setdeadline",
         {
           task: tasks,
           title: title,
@@ -218,11 +221,14 @@ const Dashboard = () => {
   const HandelGetTask = async () => {
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.get("http://localhost:3000/viewdeadline", {
-        headers: {
-          Authorization: `Bearer ${token}`, // correct placement here
-        },
-      });
+      const res = await axios.get(
+        "https://ems-backend-0xxx.onrender.com/viewdeadline",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // correct placement here
+          },
+        }
+      );
       console.log(res);
       if (res.data && res.data.data.length > 0) {
         toast.success("Tasks fetched successfully");
@@ -243,11 +249,14 @@ const Dashboard = () => {
   const getAttendance = async () => {
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.get("http://localhost:3000/getAttendance", {
-        headers: {
-          Authorization: `Bearer ${token}`, // correct placement here
-        },
-      });
+      const res = await axios.get(
+        "https://ems-backend-0xxx.onrender.com/getAttendance",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // correct placement here
+          },
+        }
+      );
       console.log(res);
 
       setAttendanceList(res.data.data);
@@ -259,7 +268,7 @@ const Dashboard = () => {
     try {
       const token = localStorage.getItem("token");
       const res = await axios.post(
-        "http://localhost:3000/filterAttendance",
+        "https://ems-backend-0xxx.onrender.com/filterAttendance",
         {
           month: month,
         },
@@ -287,7 +296,7 @@ const Dashboard = () => {
     try {
       const token = localStorage.getItem("token");
       const res = await axios.post(
-        "http://localhost:3000/applyLeave",
+        "https://ems-backend-0xxx.onrender.com/applyLeave",
         {
           reason: reason,
           startdate: leaveStart,
