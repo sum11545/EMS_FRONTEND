@@ -5,14 +5,14 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Link, useNavigate } from "react-router-dom";
 
-const Register = () => {
+const ManagerRegister = () => {
   const navigate = useNavigate();
 
   const [name, setName] = useState("");
   const [age, setAge] = useState("");
   const [joindate, setJoindate] = useState("");
   const [department, setDepartment] = useState("");
-  const [basesalary, setBasesalary] = useState("");
+  // const [basesalary, setBasesalary] = useState("");
   const [address, setaddress] = useState("");
   const [profileimage, setProfileimage] = useState("");
   const [email, setEmail] = useState("");
@@ -20,10 +20,8 @@ const Register = () => {
   const [contact, setContact] = useState("");
   const [uploading, setUploading] = useState(false);
   const [nameError, setNameError] = useState("");
+  const [passwordError, SetPasswordError] = useState("");
   const [contactError, setContactError] = useState("");
-  const [passwordError, setPasswordError] = useState("");
-  const [salaryError, setSalaryError] = useState("");
-  const [addressError, setAddressError] = useState("");
 
   const handleImageUpload = async (e) => {
     const file = e.target.files[0];
@@ -34,6 +32,7 @@ const Register = () => {
       toast.error("Only PNG and JPEG image files are allowed.");
       return;
     }
+
     setUploading(true);
     try {
       const formData = new FormData(); // <-- create FormData here
@@ -65,22 +64,15 @@ const Register = () => {
   const handleRegister = async (e) => {
     try {
       e.preventDefault();
-      if (age < 18) {
-        toast.error("Age cannot be less then 18 year ");
-      }
       const res = await axios.post(
-        "https://ems-backend-0xxx.onrender.com/register",
+        "https://ems-backend-0xxx.onrender.com/manager/register",
         {
           name,
-          age,
-          joindate,
           department,
-          basesalary,
-          address,
           email,
           password,
-          profileimage,
-          contact,
+          profilePicture: profileimage,
+          contactNo: contact,
         }
       );
       console.log(res);
@@ -90,21 +82,16 @@ const Register = () => {
           "Register Successfull will You get Mail once you verfied  "
         );
         setName("");
-        setAge("");
-        setBasesalary("");
+
         setDepartment("");
         setEmail("");
         setPassword("");
-        setJoindate("");
+
         setProfileimage("");
         setUploading(false);
         setaddress("");
         setContact("");
-        setTimeout(() => navigate("/"), 2000);
-      }
-      if (res.data.message == "User Is already Exist ") {
-        toast.error("User Is already Exist ");
-        navigate("/");
+        setTimeout(() => navigate("/Manager/Login"), 2000);
       }
     } catch (error) {
       console.log("Error", error);
@@ -120,52 +107,43 @@ const Register = () => {
   const handleName = (e) => {
     const val = e.target.value;
     setName(val);
-    const nameRegex = /^[A-Za-z\s]*$/;
-    if (!nameRegex.test(val)) {
-      setNameError("Name must contain only alphabets");
+    const RegEx = /[^a-zA-Z\s]/; // Disallow digits and symbols
+
+    if (RegEx.test(val)) {
+      setNameError("Name cannot contain numbers or special characters");
     } else {
       setNameError("");
     }
   };
+  // const handleAddress = (e) => {
+  //   const val = e.target.value;
+  //   setaddress(val);
 
+  //   // Allow: letters, numbers, spaces, commas, periods, hyphens, slashes
+  //   const RegEx = /^[a-zA-Z0-9\s,./-]*$/;
+
+  //   if (!RegEx.test(val)) {
+  //     setAddressError("Address cannot contain special characters.");
+  //   } else {
+  //     setAddressError("");
+  //   }
+  // };
   const handleContact = (e) => {
-    const val = e.target.value;
-    setContact(val);
-    if (!/^\d{10}$/.test(val)) {
-      setContactError("Contact must be exactly 10 digits");
+    const value = e.target.value;
+
+    // Allow only digits
+    if (/^\d*$/.test(value)) {
+      if (value.length <= 10) {
+        setContact(value);
+        setContactError("");
+      } else {
+        setContactError("Contact number should not exceed 10 digits.");
+      }
     } else {
-      setContactError("");
-    }
-  };
-  const handlePassword = (e) => {
-    const val = e.target.value;
-    setPassword(val);
-    if (val.length < 8) {
-      setPasswordError("Password must be at least 8 characters");
-    } else {
-      setPasswordError("");
+      setContactError("Only digits are allowed.");
     }
   };
 
-  const handleSalary = (e) => {
-    const val = e.target.value;
-    setBasesalary(val);
-    if (parseInt(val) >= 1500000) {
-      setSalaryError("Base salary must be less than ₹15,00,000");
-    } else {
-      setSalaryError("");
-    }
-  };
-  const handleAddress = (e) => {
-    const val = e.target.value;
-    setaddress(val);
-    const nameRegex = /^[A-Za-z\s]*$/;
-    if (!nameRegex.test(val)) {
-      setAddressError("Address must contain only alphabets");
-    } else {
-      setAddressError("");
-    }
-  };
   const handleCancelUpload = () => {
     setImageFile(null);
     setUploading(false);
@@ -173,13 +151,22 @@ const Register = () => {
     document.getElementById("imageInput").value = "";
   };
 
+  const handlePassword = (e) => {
+    const val = e.target.value;
+    setPassword(val);
+    if (val.length < 8) {
+      SetPasswordError("Password must be at least 8 characters");
+    } else {
+      SetPasswordError("");
+    }
+  };
   return (
     <>
       <ToastContainer autoClose={2000} position="top-right" />
       <div className="flex justify-center items-center min-h-screen bg-gray-100 px-4">
         <form className="w-full max-w-4xl bg-white p-10 rounded-xl shadow-lg">
           <h2 className="text-3xl font-bold text-center text-blue-700 mb-10">
-            Employee Registration
+            Manager Registration
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Left Column */}
@@ -197,7 +184,7 @@ const Register = () => {
                   <p className="text-red-500 text-sm mt-1">{nameError}</p>
                 )}
               </div>
-              <div>
+              {/* <div>
                 <label className="form-label">Age</label>
                 <input
                   type="number"
@@ -206,8 +193,8 @@ const Register = () => {
                   onChange={(e) => setAge(e.target.value)}
                   className="form-input"
                 />
-              </div>
-              <div>
+              </div> */}
+              {/* <div>
                 <label className="form-label">Join Date</label>
                 <input
                   type="date"
@@ -217,7 +204,7 @@ const Register = () => {
                   max={today}
                   className="form-input"
                 />
-              </div>
+              </div> */}
               <div>
                 <label className="form-label">Department</label>
                 <select
@@ -234,24 +221,17 @@ const Register = () => {
                 </select>
               </div>
 
-              <div>
-                <label className="form-label">Base Salary</label>
-                <input
-                  type="number"
-                  name="basesalary"
-                  value={basesalary}
-                  onChange={handleSalary}
-                  className="form-input"
-                />
-                {salaryError && (
-                  <p className="text-red-500 text-sm mt-1">{salaryError}</p>
-                )}
-              </div>
-            </div>
-
-            {/* Right Column */}
-            <div className="space-y-4">
-              <div>
+              {/* <div>
+                  <label className="form-label">Base Salary</label>
+                  <input
+                    type="number"
+                    name="basesalary"
+                    value={basesalary}
+                    onChange={(e) => setBasesalary(e.target.value)}
+                    className="form-input"
+                  />
+                </div> */}
+              {/* <div>
                 <label className="form-label">Address</label>
                 <input
                   type="text"
@@ -263,7 +243,7 @@ const Register = () => {
                 {addressError && (
                   <p className="text-red-500 text-sm mt-1">{addressError}</p>
                 )}
-              </div>
+              </div> */}
               <div>
                 <label className="form-label">Upload Profile Picture</label>
                 <input
@@ -277,6 +257,7 @@ const Register = () => {
                     Uploading image...
                   </p>
                 )}
+
                 {uploading && (
                   <div className="mt-2 flex items-center gap-2">
                     <button
@@ -288,6 +269,21 @@ const Register = () => {
                   </div>
                 )}
               </div>
+            </div>
+
+            {/* Right Column */}
+            <div className="space-y-4">
+              {/* <div>
+                <label className="form-label">Address</label>
+                <input
+                  type="text"
+                  name="address"
+                  value={address}
+                  onChange={(e) => setaddress(e.target.value)}
+                  className="form-input"
+                />
+              </div> */}
+
               <div>
                 <label className="form-label">Email</label>
                 <input
@@ -314,7 +310,7 @@ const Register = () => {
               <div>
                 <label className="form-label">Contact No</label>
                 <input
-                  type="Number"
+                  type="text"
                   maxLength={10}
                   name="contact"
                   value={contact}
@@ -341,7 +337,10 @@ const Register = () => {
           <div className="mt-6 text-center">
             <p className="text-gray-600">
               Already have an account?{" "}
-              <Link to="/" className="text-blue-600 hover:underline">
+              <Link
+                to="/Manager/Login"
+                className="text-blue-600 hover:underline"
+              >
                 Login
               </Link>
             </p>
@@ -374,4 +373,4 @@ const Register = () => {
   );
 };
 
-export default Register;
+export default ManagerRegister;

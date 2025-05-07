@@ -1,16 +1,29 @@
-import React from "react";
-import { Route, Navigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
-const PrivateRoute = ({ element, ...rest }) => {
-  const token = localStorage.getItem("token");
+const PrivateRoute = ({ children, role }) => {
+  let token = null;
+
+  if (role === "user") token = localStorage.getItem("token");
+  if (role === "manager") token = localStorage.getItem("managerToken");
+  if (role === "admin") token = localStorage.getItem("adminToken");
 
   if (!token) {
-    // Redirect to login page if no token (user not logged in)
-    return <Navigate to="/" replace />;
+    if (role === "user") {
+      toast.warning("Please login first!");
+      return <Navigate to="/" />;
+    }
+    if (role === "manager") {
+      toast.warning("Please login first!");
+      return <Navigate to="/Manager/Login" />;
+    }
+    if (role === "admin") {
+      toast.warning("Please login first!");
+      return <Navigate to="/Admin/Login" />;
+    }
   }
 
-  // Render the requested route if logged in
-  return <Route {...rest} element={element} />;
+  return children;
 };
 
 export default PrivateRoute;

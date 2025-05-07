@@ -67,13 +67,13 @@ const Homepage = () => {
             <div className="text-white text-xl font-semibold">EMS</div>
             <div className="space-x-6">
               <button
-                onClick={() => history.push("/manager")}
+                onClick={() => navigate("/Manager/Login")}
                 className="text-white hover:text-gray-300"
               >
                 Manager
               </button>
               <button
-                onClick={() => history.push("/admin")}
+                onClick={() => navigate("/Admin/Login")}
                 className="text-white hover:text-gray-300"
               >
                 Admin

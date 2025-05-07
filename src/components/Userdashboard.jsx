@@ -2,13 +2,24 @@ import React, { useEffect, useState } from "react";
 import { Bell, LogOut } from "lucide-react"; // install lucide-react for icons
 import { data, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
+import {
+  FaUser,
+  FaClock,
+  FaMoneyBill,
+  FaCalendarAlt,
+  FaSignOutAlt,
+  FaComments,
+  FaTasks,
+} from "react-icons/fa";
+
 import axios from "axios";
+import EmployeeChat from "./EmployeeChat";
+import EmpolyeeTask from "./EmpolyeeTask";
 
 const Dashboard = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState({});
-  const [showProfile, setShowProfile] = useState(false);
-
+  const [showProfile, setShowProfile] = useState(true);
   const [attendance, setAttendance] = useState(false);
   const [salary, setSalaary] = useState(false);
   const [deadline, setDeadline] = useState(false);
@@ -28,6 +39,8 @@ const Dashboard = () => {
   const [leaveType, setLeaveType] = useState("");
   const [showLeave, setShowLeave] = useState(false);
   const [showLeaveRecord, setShowLeaveRecord] = useState([]);
+  const [showChat, setShowChat] = useState(false);
+  const [showAssingTask, setShowAssingTask] = useState(false);
   useEffect(() => {
     const token = localStorage.getItem("token");
     const loggedInUser = JSON.parse(localStorage.getItem("user"));
@@ -332,18 +345,8 @@ const Dashboard = () => {
       <ToastContainer autoClose="2000" position="top-right" />
       <div className="flex min-h-screen">
         {/* Sidebar */}
-        <aside className="w-64 bg-blue-700 text-white flex flex-col">
-          <div className="flex flex-col items-center py-6">
-            <img
-              src={user.profileimage}
-              width={70}
-              height={70}
-              alt="Profile"
-              className="rounded-full mb-3"
-            />
-            <h2 className="text-xl font-semibold">{user.name}</h2>
-          </div>
-          <nav className="flex-1 px-4 space-y-4">
+        <aside className="w-64 bg-gray-800 text-white flex flex-col">
+          <nav className="flex-1 px-4 py-6 space-y-4">
             <button
               onClick={() => [
                 setAttendance(false),
@@ -353,11 +356,15 @@ const Dashboard = () => {
                 setApplyLeave(false),
                 setAttendanceRecord(false),
                 setShowLeave(false),
+                setShowChat(false),
+                setShowAssingTask(false),
               ]}
-              className="block hover:bg-blue-600 p-3 rounded"
+              className="flex items-center gap-3 hover:bg-gray-700 p-3 rounded"
             >
+              <FaUser />
               Profile
             </button>
+
             <button
               onClick={() => {
                 setAttendance(true);
@@ -368,11 +375,15 @@ const Dashboard = () => {
                 setAttendanceRecord(true);
                 setApplyLeave(false);
                 setShowLeave(false);
+                setShowChat(false);
+                setShowAssingTask(false);
               }}
-              className="block hover:bg-blue-600 p-3 rounded"
+              className="flex items-center gap-3 hover:bg-gray-700 p-3 rounded"
             >
+              <FaClock />
               Attendance
             </button>
+
             <button
               onClick={() => [
                 setSalaary(true),
@@ -383,11 +394,15 @@ const Dashboard = () => {
                 setDeadline(false),
                 setAttendanceRecord(false),
                 setShowLeave(false),
+                setShowChat(false),
+                setShowAssingTask(false),
               ]}
-              className="block hover:bg-blue-600 p-3 rounded"
+              className="flex items-center gap-3 hover:bg-gray-700 p-3 rounded"
             >
+              <FaMoneyBill />
               View Salary
             </button>
+
             <button
               onClick={() => [
                 setDeadline(true),
@@ -397,31 +412,75 @@ const Dashboard = () => {
                 setAttendanceRecord(false),
                 setApplyLeave(false),
                 setShowLeave(false),
+                setShowChat(false),
+                setShowAssingTask(false),
               ]}
-              className="block hover:bg-blue-600 p-3 rounded"
+              className="flex items-center gap-3 hover:bg-gray-700 p-3 rounded"
             >
+              <FaCalendarAlt />
               Set Deadline
             </button>
+
             <button
               onClick={() => {
-                setShowProfile(false),
-                  setApplyLeave(true),
-                  setAttendance(false),
-                  setSalaary(false),
-                  setDeadline(false);
+                setShowProfile(false);
+                setApplyLeave(true);
+                setAttendance(false);
+                setSalaary(false);
+                setDeadline(false);
                 setAttendanceRecord(false);
                 setShowLeave(true);
+                setShowChat(false);
+                setShowAssingTask(false);
               }}
-              className="block hover:bg-blue-600 p-3 rounded"
+              className="flex items-center gap-3 hover:bg-gray-700 p-3 rounded"
             >
+              <FaCalendarAlt />
               Apply Leave
             </button>
+
+            <button
+              onClick={() => {
+                setShowChat(true);
+                setShowProfile(false);
+                setApplyLeave(false);
+                setAttendance(false);
+                setSalaary(false);
+                setDeadline(false);
+                setAttendanceRecord(false);
+                setShowLeave(false);
+                setShowAssingTask(false);
+              }}
+              className="flex items-center gap-3 hover:bg-gray-700 p-3 rounded"
+            >
+              <FaComments />
+              Team Chat
+            </button>
+
+            <button
+              onClick={() => {
+                setShowChat(false);
+                setShowProfile(false);
+                setApplyLeave(false);
+                setAttendance(false);
+                setSalaary(false);
+                setDeadline(false);
+                setAttendanceRecord(false);
+                setShowLeave(false);
+                setShowAssingTask(true);
+              }}
+              className="flex items-center gap-3 hover:bg-gray-700 p-3 rounded"
+            >
+              <FaTasks />
+              View Task
+            </button>
           </nav>
+
           <button
             onClick={handleLogout}
             className="flex items-center justify-center gap-2 p-4 bg-red-500 hover:bg-red-600"
           >
-            <LogOut size={20} />
+            <FaSignOutAlt />
             Logout
           </button>
         </aside>
@@ -614,144 +673,142 @@ const Dashboard = () => {
 
             {deadline && (
               <>
-                <div className="bg-white p-6 rounded-lg shadow-md space-y-4 mt-6">
-                  <h2 className="text-2xl font-semibold text-blue-600 mb-4">
-                    Add New Task
+                <div className="bg-white p-8 rounded-xl shadow-lg mt-6 space-y-6">
+                  <h2 className="text-2xl font-bold text-blue-700">
+                    Assign New Task
                   </h2>
 
                   {/* Title Input */}
-                  <div className="flex flex-col space-y-2">
-                    <label className="text-gray-700 font-medium">
-                      Enter Title
+                  <div>
+                    <label className="block text-gray-700 font-medium mb-1">
+                      Task Title
                     </label>
                     <input
                       type="text"
-                      placeholder="Enter a title"
+                      placeholder="Enter task title"
                       value={title}
                       onChange={(e) => setTitle(e.target.value)}
-                      className="p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+                      className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
                     />
-                    <select option="Janunary">January</select>
                   </div>
 
-                  {/* Tasks Input */}
-                  {tasks.map((task, index) => (
-                    <div key={index} className="flex items-center space-x-2">
-                      <div className="flex flex-col flex-1 space-y-2">
-                        <label className="text-gray-700 font-medium">
-                          Enter Task {index + 1}
-                        </label>
-                        <input
-                          type="text"
-                          placeholder="Enter a task"
-                          value={task}
-                          onChange={(e) =>
-                            handleTaskChange(index, e.target.value)
-                          }
-                          className="p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
-                        />
+                  {/* Dynamic Task Inputs */}
+                  <div className="space-y-4">
+                    {tasks.map((task, index) => (
+                      <div key={index} className="flex items-center gap-4">
+                        <div className="w-full">
+                          <label className="block text-gray-700 font-medium mb-1">
+                            Sub Task {index + 1}
+                          </label>
+                          <input
+                            type="text"
+                            value={task}
+                            onChange={(e) =>
+                              handleTaskChange(index, e.target.value)
+                            }
+                            className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+                          />
+                        </div>
+                        <button
+                          onClick={() => deleteTaskField(index)}
+                          className="text-red-600 hover:text-red-800 text-2xl mt-6"
+                          title="Delete Task"
+                        >
+                          🗑️
+                        </button>
                       </div>
-
-                      {/* Delete button for each task */}
-                      <button
-                        type="button"
-                        onClick={() => deleteTaskField(index)}
-                        className="bg-red-500 text-white p-2 rounded-full hover:bg-red-600 h-10 w-10 flex items-center justify-center mt-6"
-                        title="Delete Task"
-                      >
-                        🗑️
-                      </button>
-                    </div>
-                  ))}
-
-                  {/* Add another task */}
-                  <button
-                    type="button"
-                    onClick={addTaskField}
-                    className="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600"
-                  >
-                    + Add Another Task
-                  </button>
-
-                  {/* Start Date Input */}
-                  <div className="flex flex-col space-y-2">
-                    <label className="text-gray-700 font-medium">
-                      Enter Start Date
-                    </label>
-                    <input
-                      type="date"
-                      value={startDate}
-                      onChange={(e) => setStartDate(e.target.value)}
-                      className="p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
-                    />
+                    ))}
+                    <button
+                      onClick={addTaskField}
+                      className="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600 transition"
+                    >
+                      + Add Sub Task
+                    </button>
                   </div>
 
-                  {/* End Date Input */}
-                  <div className="flex flex-col space-y-2">
-                    <label className="text-gray-700 font-medium">
-                      Enter End Date
-                    </label>
-                    <input
-                      type="date"
-                      value={endDate}
-                      onChange={(e) => setEndDate(e.target.value)}
-                      className="p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
-                    />
+                  {/* Start & End Date */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-gray-700 font-medium mb-1">
+                        Start Date
+                      </label>
+                      <input
+                        type="date"
+                        value={startDate}
+                        onChange={(e) => setStartDate(e.target.value)}
+                        className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-gray-700 font-medium mb-1">
+                        End Date
+                      </label>
+                      <input
+                        type="date"
+                        value={endDate}
+                        onChange={(e) => setEndDate(e.target.value)}
+                        className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+                      />
+                    </div>
                   </div>
 
                   {/* Submit Button */}
-                  <button
-                    onClick={handleSubmit}
-                    className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 mt-4"
-                  >
-                    Submit Task
-                  </button>
+                  <div className="text-right">
+                    <button
+                      onClick={handleSubmit}
+                      className="bg-blue-600 text-white py-2 px-6 rounded hover:bg-blue-700 transition"
+                    >
+                      Submit Task
+                    </button>
+                  </div>
                 </div>
-                <div className="flex justify-center mt-6">
+
+                {/* Get Task Button */}
+                <div className="flex justify-center mt-8">
                   <button
                     onClick={HandelGetTask}
-                    className="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-6 rounded-lg shadow-md transition duration-300"
+                    className="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-6 rounded-lg shadow-md transition"
                   >
-                    Get Tasks
+                    View All Tasks
                   </button>
                 </div>
-                <div className="space-y-4">
-                  {allTask.map((task, index) => (
+
+                {/* Task Display */}
+                <div className="space-y-6 mt-6">
+                  {allTask.map((task) => (
                     <div
                       key={task._id}
-                      className="p-4 bg-white shadow-md rounded-lg flex justify-between items-center"
+                      className="p-6 bg-white rounded-xl shadow-md space-y-2"
                     >
-                      <div>
-                        <h3 className="text-lg font-semibold text-gray-800">
-                          {task.title}
-                        </h3>
-                        <ul className="list-disc list-inside text-gray-600">
-                          {Array.isArray(task.task) && task.task.length > 0 ? (
-                            task.task.map((sub, idx) => (
-                              <li key={idx}>{sub}</li>
-                            ))
-                          ) : (
-                            <li>No tasks listed</li>
-                          )}
-                        </ul>
+                      <h3 className="text-xl font-semibold text-gray-800">
+                        {task.title}
+                      </h3>
 
-                        <p className="text-sm text-gray-500">
-                          Status:{" "}
-                          <span
-                            className={
-                              task.iscomplete
-                                ? "text-green-600"
-                                : "text-red-600"
-                            }
-                          >
-                            {task.iscomplete ? "Completed" : "Pending"}
-                          </span>
-                        </p>
-                      </div>
+                      <ul className="list-disc list-inside text-gray-600">
+                        {Array.isArray(task.task) && task.task.length > 0 ? (
+                          task.task.map((sub, idx) => <li key={idx}>{sub}</li>)
+                        ) : (
+                          <li>No subtasks listed</li>
+                        )}
+                      </ul>
+
+                      <p className="text-sm text-gray-500">
+                        Status:{" "}
+                        <span
+                          className={
+                            task.iscomplete
+                              ? "text-green-600"
+                              : "text-red-600 font-medium"
+                          }
+                        >
+                          {task.iscomplete ? "Completed" : "Pending"}
+                        </span>
+                      </p>
+
                       {!task.iscomplete && (
                         <button
                           onClick={() => handleComplete(task._id)}
-                          className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg shadow"
+                          className="mt-2 bg-blue-500 hover:bg-blue-600 text-white py-1.5 px-4 rounded transition"
                         >
                           Mark as Complete
                         </button>
@@ -761,83 +818,98 @@ const Dashboard = () => {
                 </div>
               </>
             )}
+
             {applyLeave && (
-              <div className="max-w-md mx-auto bg-white p-6 rounded-lg shadow-md space-y-4">
-                <div>
-                  <label
-                    htmlFor="reason"
-                    className="block text-gray-700 font-medium mb-1"
-                  >
-                    Reason
-                  </label>
-                  <textarea
-                    id="reason"
-                    placeholder="Enter a reason"
-                    className="w-full border border-gray-300 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-                    value={reason}
-                    onChange={(e) => setReason(e.target.value)}
-                  ></textarea>
+              <div className="max-w-4xl mx-auto bg-white p-8 rounded-xl shadow-lg space-y-6 mt-8">
+                <h2 className="text-2xl font-bold text-blue-700 mb-4 text-center">
+                  Apply for Leave
+                </h2>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {/* Reason */}
+                  <div className="flex flex-col">
+                    <label
+                      htmlFor="reason"
+                      className="text-gray-700 font-semibold mb-1"
+                    >
+                      Reason
+                    </label>
+                    <textarea
+                      id="reason"
+                      rows="3"
+                      placeholder="Enter your reason"
+                      className="border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+                      value={reason}
+                      onChange={(e) => setReason(e.target.value)}
+                    ></textarea>
+                  </div>
+
+                  {/* Leave Type */}
+                  <div className="flex flex-col">
+                    <label
+                      htmlFor="leaveType"
+                      className="text-gray-700 font-semibold mb-1"
+                    >
+                      Leave Type
+                    </label>
+                    <select
+                      id="leaveType"
+                      className="border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+                      value={leaveType}
+                      onChange={(e) => setLeaveType(e.target.value)}
+                    >
+                      <option value="">-- Select Leave Type --</option>
+                      <option value="Casual">Casual</option>
+                      <option value="Sick">Sick</option>
+                      <option value="Earned">Earned Leave</option>
+                      <option value="Maternity">Maternity Leave</option>
+                    </select>
+                  </div>
+
+                  {/* Start Date */}
+                  <div className="flex flex-col">
+                    <label
+                      htmlFor="startDate"
+                      className="text-gray-700 font-semibold mb-1"
+                    >
+                      Start Date
+                    </label>
+                    <input
+                      type="date"
+                      id="startDate"
+                      value={leaveStart}
+                      onChange={(e) => setLeaveStart(e.target.value)}
+                      className="border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+                    />
+                  </div>
+
+                  {/* End Date */}
+                  <div className="flex flex-col">
+                    <label
+                      htmlFor="endDate"
+                      className="text-gray-700 font-semibold mb-1"
+                    >
+                      End Date
+                    </label>
+                    <input
+                      type="date"
+                      id="endDate"
+                      value={leaveEnd}
+                      onChange={(e) => setLeaveEnd(e.target.value)}
+                      className="border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+                    />
+                  </div>
                 </div>
 
-                <div>
-                  <label
-                    htmlFor="startDate"
-                    className="block text-gray-700 font-medium mb-1"
+                {/* Submit Button */}
+                <div className="flex justify-end">
+                  <button
+                    onClick={handleLeave}
+                    className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg shadow transition"
                   >
-                    Enter A Start Date
-                  </label>
-                  <input
-                    type="date"
-                    id="startDate"
-                    value={leaveStart}
-                    onChange={(e) => setLeaveStart(e.target.value)}
-                    className="w-full border border-gray-300 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-                  />
+                    Submit Leave Request
+                  </button>
                 </div>
-
-                <div>
-                  <label
-                    htmlFor="endDate"
-                    className="block text-gray-700 font-medium mb-1"
-                  >
-                    Enter An End Date
-                  </label>
-                  <input
-                    type="date"
-                    id="endDate"
-                    value={leaveEnd}
-                    onChange={(e) => setLeaveEnd(e.target.value)}
-                    className="w-full border border-gray-300 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-                  />
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="leaveType"
-                    className="block text-gray-700 font-medium mb-1"
-                  >
-                    Select Leave Type
-                  </label>
-                  <select
-                    id="leaveType"
-                    className="w-full border border-gray-300 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-                    value={leaveType}
-                    onChange={(e) => setLeaveType(e.target.value)}
-                  >
-                    <option value="">Select Type</option>
-                    <option value="Casual">Casual</option>
-                    <option value="Sick">Sick</option>
-                    <option value="Earned">Earned Leave</option>
-                    <option value="Maternity">Maternity Leave</option>
-                  </select>
-                </div>
-
-                <button
-                  className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-md transition duration-300"
-                  onClick={handleLeave}
-                >
-                  Submit
-                </button>
               </div>
             )}
 
@@ -869,6 +941,9 @@ const Dashboard = () => {
                         <p>
                           <strong>Status:</strong> {leave.status}
                         </p>
+                        <p>
+                          <strong>Remark:</strong> {leave.remark}
+                        </p>
                       </div>
                     ))
                   ) : (
@@ -877,6 +952,10 @@ const Dashboard = () => {
                 </div>
               </>
             )}
+            {showChat && (
+              <EmployeeChat department={user.department} username={user.name} />
+            )}
+            {showAssingTask && <EmpolyeeTask />}
 
             {/* Put dynamic component here like Profile / Attendance / etc */}
           </main>
