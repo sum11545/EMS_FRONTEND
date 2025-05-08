@@ -14,7 +14,7 @@ const ManagerRating = () => {
     const fetchData = async () => {
       try {
         const res = await axios.post(
-          "https://ems-backend-0xxx.onrender.com/manager/allEmpName",
+          "http://localhost:3000/manager/allEmpName",
           {},
           {
             headers: { Authorization: `Bearer ${token}` },
@@ -32,7 +32,7 @@ const ManagerRating = () => {
 
     const fetchHistory = async () => {
       const res = await axios.post(
-        "https://ems-backend-0xxx.onrender.com/manager/getPerformance",
+        "http://localhost:3000/manager/getPerformance",
         {},
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -52,7 +52,7 @@ const ManagerRating = () => {
 
     try {
       await axios.post(
-        "https://ems-backend-0xxx.onrender.com/manager/performance",
+        "http://localhost:3000/manager/performance",
         {
           employeeId: selectedUserId,
           rating,

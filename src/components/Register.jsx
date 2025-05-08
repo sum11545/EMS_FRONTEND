@@ -68,21 +68,18 @@ const Register = () => {
       if (age < 18) {
         toast.error("Age cannot be less then 18 year ");
       }
-      const res = await axios.post(
-        "https://ems-backend-0xxx.onrender.com/register",
-        {
-          name,
-          age,
-          joindate,
-          department,
-          basesalary,
-          address,
-          email,
-          password,
-          profileimage,
-          contact,
-        }
-      );
+      const res = await axios.post("http://localhost:3000/register", {
+        name,
+        age,
+        joindate,
+        department,
+        basesalary,
+        address,
+        email,
+        password,
+        profileimage,
+        contact,
+      });
       console.log(res);
 
       if (res.data.message) {
@@ -293,6 +290,7 @@ const Register = () => {
                 <input
                   type="email"
                   name="email"
+                  required:true
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="form-input"

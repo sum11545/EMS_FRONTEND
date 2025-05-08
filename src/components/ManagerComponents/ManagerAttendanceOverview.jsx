@@ -11,7 +11,7 @@ const ManagerAttendanceOverview = () => {
     try {
       const token = localStorage.getItem("managerToken");
       const res = await axios.post(
-        `https://ems-backend-0xxx.onrender.com/manager/attendanceOverview`,
+        `http://localhost:3000/manager/attendanceOverview`,
         {
           date: selectedDate,
         },

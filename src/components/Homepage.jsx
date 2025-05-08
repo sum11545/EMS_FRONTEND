@@ -78,12 +78,7 @@ const Homepage = () => {
               >
                 Admin
               </button>
-              <button
-                onClick={() => history.push("/employee")}
-                className="text-white hover:text-gray-300"
-              >
-                Employee
-              </button>
+
               <button
                 onClick={() => navigate("/register")}
                 className="text-white hover:text-gray-300"

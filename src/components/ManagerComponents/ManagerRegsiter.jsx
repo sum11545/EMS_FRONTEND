@@ -64,17 +64,14 @@ const ManagerRegister = () => {
   const handleRegister = async (e) => {
     try {
       e.preventDefault();
-      const res = await axios.post(
-        "https://ems-backend-0xxx.onrender.com/manager/register",
-        {
-          name,
-          department,
-          email,
-          password,
-          profilePicture: profileimage,
-          contactNo: contact,
-        }
-      );
+      const res = await axios.post("http://localhost:3000/manager/register", {
+        name,
+        department,
+        email,
+        password,
+        profilePicture: profileimage,
+        contactNo: contact,
+      });
       console.log(res);
 
       if (res.data.message) {

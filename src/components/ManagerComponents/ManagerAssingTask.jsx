@@ -17,7 +17,7 @@ const ManagerAssignTask = () => {
       try {
         const token = localStorage.getItem("managerToken");
         const res = await axios.post(
-          "https://ems-backend-0xxx.onrender.com/manager/allEmpName",
+          "http://localhost:3000/manager/allEmpName",
           {},
           { headers: { Authorization: `Bearer ${token}` } }
         );
@@ -30,12 +30,9 @@ const ManagerAssignTask = () => {
 
     const fetchTasks = async () => {
       const token = localStorage.getItem("managerToken");
-      const res = await axios.get(
-        "https://ems-backend-0xxx.onrender.com/manager/getTask",
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      const res = await axios.get("http://localhost:3000/manager/getTask", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       setAssignedTasks(res.data.data || []);
     };
 
@@ -50,23 +47,16 @@ const ManagerAssignTask = () => {
   const assignTask = async () => {
     try {
       const token = localStorage.getItem("managerToken");
-      await axios.post(
-        "https://ems-backend-0xxx.onrender.com/manager/assingTask",
-        taskData,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      await axios.post("http://localhost:3000/manager/assingTask", taskData, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       toast.success("Task assigned successfully!");
       setTaskData({ empId: "", title: "", description: "", dueDate: "" });
 
       // Refresh assigned tasks
-      const res = await axios.get(
-        "https://ems-backend-0xxx.onrender.com/manager/getTask",
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      const res = await axios.get("http://localhost:3000/manager/getTask", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       setAssignedTasks(res.data.data || []);
     } catch (err) {
       console.error(err);

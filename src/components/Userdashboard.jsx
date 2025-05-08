@@ -41,6 +41,10 @@ const Dashboard = () => {
   const [showLeaveRecord, setShowLeaveRecord] = useState([]);
   const [showChat, setShowChat] = useState(false);
   const [showAssingTask, setShowAssingTask] = useState(false);
+  const [unreadCount, setUnreadCount] = useState(0);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [notifications, setNotifications] = useState([]);
+
   useEffect(() => {
     const token = localStorage.getItem("token");
     const loggedInUser = JSON.parse(localStorage.getItem("user"));
@@ -61,14 +65,11 @@ const Dashboard = () => {
     const fetchData = async () => {
       try {
         const token = localStorage.getItem("token");
-        const res = await axios.get(
-          "https://ems-backend-0xxx.onrender.com/getLeaveInfo",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`, // if you have token based login
-            },
-          }
-        );
+        const res = await axios.get("http://localhost:3000/getLeaveInfo", {
+          headers: {
+            Authorization: `Bearer ${token}`, // if you have token based login
+          },
+        });
         console.log(res);
 
         setShowLeaveRecord(res.data.data);
@@ -98,7 +99,7 @@ const Dashboard = () => {
       console.log(currentTime);
 
       const res = await axios.post(
-        "https://ems-backend-0xxx.onrender.com/attendance/Checkin",
+        "http://localhost:3000/attendance/Checkin",
         {
           checkIn: currentTime,
         },
@@ -136,7 +137,7 @@ const Dashboard = () => {
       console.log(formattedTime);
 
       const response = await axios.post(
-        "https://ems-backend-0xxx.onrender.com/attendance/Checkout",
+        "http://localhost:3000/attendance/Checkout",
         {
           checkOut: formattedTime,
         },
@@ -166,7 +167,7 @@ const Dashboard = () => {
     try {
       const token = localStorage.getItem("token");
       const res = await axios.post(
-        "https://ems-backend-0xxx.onrender.com/salary",
+        "http://localhost:3000/salary",
         {},
         {
           headers: {
@@ -188,7 +189,7 @@ const Dashboard = () => {
     try {
       const token = localStorage.getItem("token");
       const res = await axios.post(
-        "https://ems-backend-0xxx.onrender.com/setdeadline",
+        "http://localhost:3000/setdeadline",
         {
           task: tasks,
           title: title,
@@ -234,14 +235,11 @@ const Dashboard = () => {
   const HandelGetTask = async () => {
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.get(
-        "https://ems-backend-0xxx.onrender.com/viewdeadline",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`, // correct placement here
-          },
-        }
-      );
+      const res = await axios.get("http://localhost:3000/viewdeadline", {
+        headers: {
+          Authorization: `Bearer ${token}`, // correct placement here
+        },
+      });
       console.log(res);
       if (res.data && res.data.data.length > 0) {
         toast.success("Tasks fetched successfully");
@@ -262,14 +260,11 @@ const Dashboard = () => {
   const getAttendance = async () => {
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.get(
-        "https://ems-backend-0xxx.onrender.com/getAttendance",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`, // correct placement here
-          },
-        }
-      );
+      const res = await axios.get("http://localhost:3000/getAttendance", {
+        headers: {
+          Authorization: `Bearer ${token}`, // correct placement here
+        },
+      });
       console.log(res);
 
       setAttendanceList(res.data.data);
@@ -281,7 +276,7 @@ const Dashboard = () => {
     try {
       const token = localStorage.getItem("token");
       const res = await axios.post(
-        "https://ems-backend-0xxx.onrender.com/filterAttendance",
+        "http://localhost:3000/filterAttendance",
         {
           month: month,
         },
@@ -309,7 +304,7 @@ const Dashboard = () => {
     try {
       const token = localStorage.getItem("token");
       const res = await axios.post(
-        "https://ems-backend-0xxx.onrender.com/applyLeave",
+        "http://localhost:3000/applyLeave",
         {
           reason: reason,
           startdate: leaveStart,
@@ -337,6 +332,56 @@ const Dashboard = () => {
       if (error.response.data.message) {
         toast.error(error.response.data.message);
       }
+    }
+  };
+  const fetchNotificationCount = async () => {
+    const token = localStorage.getItem("token");
+    const res = await axios.get("http://localhost:3000/notificationCount", {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    setUnreadCount(res.data.data.count);
+    setNotifications(res.data.data.notifications);
+
+    console.log(res);
+  };
+
+  const markNotificationsAsRead = async () => {
+    const token = localStorage.getItem("token");
+    const res = await axios.post(
+      "http://localhost:3000/notificationMarked",
+      {},
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
+    setUnreadCount(0);
+    setNotifications([]);
+    setShowDropdown(true);
+    fetchNotificationCount(); // refresh list
+  };
+  useEffect(() => {
+    fetchNotificationCount();
+  }, []);
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowDropdown(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  useEffect(() => {
+    fetchNotificationCount();
+  }, []);
+
+  const handleBellClick = async () => {
+    if (showDropdown) {
+      setShowDropdown(false);
+    } else {
+      await markNotificationsAsRead();
+      setShowDropdown(true);
     }
   };
 
@@ -493,7 +538,39 @@ const Dashboard = () => {
               Employee Portal
             </h1>
             <div className="flex items-center gap-4">
-              <Bell size={24} className="text-gray-700 cursor-pointer" />
+              <div className="relative">
+                <Bell
+                  size={24}
+                  className="text-gray-700 cursor-pointer"
+                  onClick={handleBellClick}
+                />
+                {unreadCount > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-1.5 rounded-full">
+                    {unreadCount}
+                  </span>
+                )}
+                {showDropdown && (
+                  <div className="absolute right-0 mt-2 w-64 bg-white shadow-lg border rounded-lg z-50">
+                    <ul className="max-h-60 overflow-y-auto">
+                      {notifications.length > 0 ? (
+                        notifications.map((note, i) => (
+                          <li
+                            key={i}
+                            className="p-2 border-b text-sm text-gray-700 hover:bg-gray-100"
+                          >
+                            {note.message}
+                          </li>
+                        ))
+                      ) : (
+                        <li className="p-2 text-sm text-gray-500">
+                          No notifications available.
+                        </li>
+                      )}
+                    </ul>
+                  </div>
+                )}
+              </div>
+
               <img
                 src={user.profileimage}
                 width={40}

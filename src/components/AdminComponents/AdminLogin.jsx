@@ -13,13 +13,10 @@ const AdminLogin = () => {
     e.preventDefault();
 
     try {
-      const res = await axios.post(
-        "https://ems-backend-0xxx.onrender.com/admin/login",
-        {
-          email,
-          password,
-        }
-      );
+      const res = await axios.post("http://localhost:3000/admin/login", {
+        email,
+        password,
+      });
       await localStorage.setItem("adminToken", res.data.token);
       await localStorage.setItem("adminProfile", JSON.stringify(res.data.user));
       console.log(res.data.user);
@@ -67,6 +64,13 @@ const AdminLogin = () => {
             className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition duration-200"
           >
             Login
+          </button>
+          <button
+            onClick={() => {
+              navigate("/");
+            }}
+          >
+            Go Back
           </button>
         </form>
       </div>

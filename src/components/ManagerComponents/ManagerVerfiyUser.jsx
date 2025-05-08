@@ -10,7 +10,7 @@ const ManagerVerifyUser = () => {
       try {
         const token = localStorage.getItem("managerToken");
         const res = await axios.post(
-          "https://ems-backend-0xxx.onrender.com/manager/unverfiedUserList",
+          "http://localhost:3000/manager/unverfiedUserList",
           {},
           {
             headers: {
@@ -18,10 +18,12 @@ const ManagerVerifyUser = () => {
             },
           }
         );
+        console.log("unverfied List", res);
         if (res.data) {
           setAllUsers(res.data.unverifiedUsers);
         }
       } catch (err) {
+        console.log(err);
         toast.error("Failed to fetch users");
       }
     };
@@ -32,7 +34,7 @@ const ManagerVerifyUser = () => {
     try {
       const token = localStorage.getItem("managerToken");
       const res = await axios.post(
-        "https://ems-backend-0xxx.onrender.com/manager/verfiyuser",
+        "http://localhost:3000/manager/verfiyuser",
         { userID: userid },
         {
           headers: {
@@ -40,6 +42,7 @@ const ManagerVerifyUser = () => {
           },
         }
       );
+
       toast.success("User verified");
       setAllUsers((prev) => prev.filter((u) => u._id !== userid));
     } catch (err) {

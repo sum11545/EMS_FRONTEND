@@ -12,16 +12,23 @@ const AdminLeave = () => {
     enddate: "",
   });
 
+  const resetFilters = () => {
+    setFilters({
+      name: "",
+      status: "",
+      startdate: "",
+      enddate: "",
+    });
+    setFilteredData(allData); // Reset to show all data
+  };
+
   const token = localStorage.getItem("adminToken");
 
   const fetchAllLeaves = async () => {
     try {
-      const res = await axios.get(
-        "https://ems-backend-0xxx.onrender.com/admin/leaves",
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      const res = await axios.get("http://localhost:3000/admin/leaves", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       setAllData(res.data.data);
       setFilteredData(res.data.data);
     } catch (err) {
@@ -106,7 +113,7 @@ const AdminLeave = () => {
         >
           <option value="">All Status</option>
           <option value="pending">Pending</option>
-          <option value="approved">Approved</option>
+          <option value="accepted">Accepted</option>
           <option value="rejected">Rejected</option>
         </select>
         <button
@@ -114,6 +121,12 @@ const AdminLeave = () => {
           className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
         >
           Apply Filters
+        </button>
+        <button
+          onClick={resetFilters}
+          className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
+        >
+          Reset Filters
         </button>
       </div>
 

@@ -10,7 +10,7 @@ const AdminVerifyManagers = () => {
     try {
       const token = localStorage.getItem("adminToken");
       const res = await axios.get(
-        "https://ems-backend-0xxx.onrender.com/admin/unverfiedManager",
+        "http://localhost:3000/admin/unverfiedManager",
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -25,7 +25,7 @@ const AdminVerifyManagers = () => {
     try {
       const token = localStorage.getItem("adminToken");
       await axios.post(
-        `https://ems-backend-0xxx.onrender.com/admin/verfiyManager`,
+        `http://localhost:3000/admin/verfiyManager`,
         { managerId: id },
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -41,7 +41,7 @@ const AdminVerifyManagers = () => {
     try {
       const token = localStorage.getItem("adminToken");
       await axios.post(
-        `https://ems-backend-0xxx.onrender.com/admin/rejectManager`,
+        `http://localhost:3000/admin/rejectManager`,
         { managerId: id },
         {
           headers: { Authorization: `Bearer ${token}` },

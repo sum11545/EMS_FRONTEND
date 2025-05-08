@@ -87,6 +87,12 @@ const ManagerLogin = () => {
             {" "}
             <p>Forget Password</p>
           </button>
+          <button
+            onClick={() => navigate("/")}
+            className="  bg-gray-300 px-1 py-1 rounded hover:bg-gray-400 transition"
+          >
+            Go Back
+          </button>
         </form>
       </div>
     </>

@@ -14,12 +14,9 @@ const AdminManageManagers = () => {
   const fetchManagers = async () => {
     try {
       const token = localStorage.getItem("adminToken");
-      const res = await axios.get(
-        "https://ems-backend-0xxx.onrender.com/admin/allManager",
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      const res = await axios.get("http://localhost:3000/admin/allManager", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       setManagers(res.data.data || []);
     } catch (err) {
       console.error(err);
@@ -35,7 +32,7 @@ const AdminManageManagers = () => {
     try {
       const token = localStorage.getItem("adminToken");
       await axios.post(
-        `https://ems-backend-0xxx.onrender.com/admin/deleteManager`,
+        `http://localhost:3000/admin/deleteManager`,
         { managerId: id },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -51,7 +48,7 @@ const AdminManageManagers = () => {
     try {
       const token = localStorage.getItem("adminToken");
       await axios.post(
-        `https://ems-backend-0xxx.onrender.com/admin/verifyManager`,
+        `http://localhost:3000/admin/verifyManager`,
         { managerId: id },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -78,7 +75,7 @@ const AdminManageManagers = () => {
 
     try {
       const res = await axios.post(
-        `https://ems-backend-0xxx.onrender.com/admin/editManager`,
+        `http://localhost:3000/admin/editManager`,
         {
           managerId: editingId,
           name: name,

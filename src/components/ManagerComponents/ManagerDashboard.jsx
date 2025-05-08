@@ -46,7 +46,7 @@ const ManagerDashboard = () => {
       console.log(token);
       try {
         const res = await axios.post(
-          "https://ems-backend-0xxx.onrender.com/manager/empCount",
+          "http://localhost:3000/manager/empCount",
           {},
           {
             headers: {
@@ -69,7 +69,7 @@ const ManagerDashboard = () => {
       console.log(token);
       try {
         const res = await axios.post(
-          "https://ems-backend-0xxx.onrender.com/manager/leaveCount",
+          "http://localhost:3000/manager/leaveCount",
           {},
           {
             headers: {

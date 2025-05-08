@@ -11,20 +11,17 @@ const AdminManageEmployees = () => {
     name: "",
     email: "",
     department: "",
-    contactNo: "",
-    salary: "",
+    contact: "",
+    basesalary: "",
   });
 
   const token = localStorage.getItem("adminToken");
 
   const fetchEmployees = async () => {
     try {
-      const res = await axios.get(
-        "https://ems-backend-0xxx.onrender.com/admin/allEmployee",
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      const res = await axios.get("http://localhost:3000/admin/allEmployee", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       console.log(res.data);
 
       setEmployees(res.data.data);
@@ -43,8 +40,8 @@ const AdminManageEmployees = () => {
       name: emp.name,
       email: emp.email,
       department: emp.department,
-      contact: emp.contactNo,
-      basesalary: emp.salary,
+      contact: emp.contact,
+      basesalary: emp.basesalary,
     });
     setEditModalOpen(true);
   };
@@ -54,7 +51,7 @@ const AdminManageEmployees = () => {
     try {
       const token = localStorage.getItem("adminToken");
       const res = await axios.post(
-        "https://ems-backend-0xxx.onrender.com/admin/editEmployee",
+        "http://localhost:3000/admin/editEmployee",
         { employeeId: selectedEmployee, ...form },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -72,7 +69,7 @@ const AdminManageEmployees = () => {
     try {
       const token = localStorage.getItem("adminToken");
       const res = await axios.post(
-        `https://ems-backend-0xxx.onrender.com/admin/deletEmployee`,
+        `http://localhost:3000/admin/deletEmployee`,
         {
           employeeId: id,
         },
@@ -167,7 +164,7 @@ const AdminManageEmployees = () => {
                   placeholder="Contact No"
                   value={form.contact}
                   onChange={(e) =>
-                    setForm({ ...form, contactNo: e.target.value })
+                    setForm({ ...form, contact: e.target.value })
                   }
                   className="w-full mb-2 p-2 border rounded"
                 />
@@ -175,7 +172,9 @@ const AdminManageEmployees = () => {
                   type="number"
                   placeholder="Salary"
                   value={form.basesalary}
-                  onChange={(e) => setForm({ ...form, salary: e.target.value })}
+                  onChange={(e) =>
+                    setForm({ ...form, basesalary: e.target.value })
+                  }
                   className="w-full mb-4 p-2 border rounded"
                 />
                 <div className="flex justify-end gap-2">

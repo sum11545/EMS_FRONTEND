@@ -13,18 +13,25 @@ const AdminAttendance = () => {
     employeeName: "",
   });
 
+  const resetFilters = () => {
+    setFilters({
+      startDate: "",
+      endDate: "",
+      department: "",
+      employeeName: "",
+    });
+    setFilteredData(allData); // Restore full data
+  };
+
   const token = localStorage.getItem("adminToken");
 
-  const manualDepartments = ["HR", "Engineer", "Sales", "Finance"];
+  const manualDepartments = ["HR", "Engineering", "Sales", "Finance"];
 
   const fetchAllAttendance = async () => {
     try {
-      const res = await axios.get(
-        "https://ems-backend-0xxx.onrender.com/admin/allAttendance",
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      const res = await axios.get("http://localhost:3000/admin/allAttendance", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       setAllData(res.data.data);
       setFilteredData(res.data.data);
     } catch (err) {
@@ -123,6 +130,12 @@ const AdminAttendance = () => {
           className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
         >
           Apply Filters
+        </button>
+        <button
+          onClick={resetFilters}
+          className="bg-gray-300 text-black px-4 py-2 rounded hover:bg-gray-400"
+        >
+          Reset Filters
         </button>
       </div>
 

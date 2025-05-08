@@ -8,12 +8,9 @@ const EmpolyeeTask = () => {
   const fetchTasks = async () => {
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.get(
-        "https://ems-backend-0xxx.onrender.com/assingTask",
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      const res = await axios.get("http://localhost:3000/assingTask", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       console.log(res.data);
       setTasks(res.data.data || []);
     } catch (err) {
@@ -31,7 +28,7 @@ const EmpolyeeTask = () => {
       const token = localStorage.getItem("token");
 
       await axios.post(
-        `https://ems-backend-0xxx.onrender.com/completAssingTask`,
+        `http://localhost:3000/completAssingTask`,
         { taskID: taskId },
         { headers: { Authorization: `Bearer ${token}` } }
       );

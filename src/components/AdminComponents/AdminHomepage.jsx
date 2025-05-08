@@ -21,12 +21,9 @@ const AdminHomepage = () => {
     const fetchStats = async () => {
       try {
         const token = localStorage.getItem("adminToken");
-        const res = await axios.get(
-          "https://ems-backend-0xxx.onrender.com/admin/dashboard",
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
+        const res = await axios.get("http://localhost:3000/admin/dashboard", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
         console.log(res);
         setStats(res.data);
       } catch (err) {

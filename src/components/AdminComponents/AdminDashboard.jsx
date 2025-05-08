@@ -125,7 +125,7 @@ const AdminDashboard = () => {
               setShowManageEmployee(false);
               setShowAttendance(false);
               setShowLeave(false);
-              navigate("/Admin/Login");
+              navigate("/");
             }}
             className="flex items-center gap-2 hover:text-yellow-300"
           >

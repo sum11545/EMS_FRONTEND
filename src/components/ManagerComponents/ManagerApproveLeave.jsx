@@ -16,7 +16,7 @@ const ManagerApproveLeave = ({ allLeave }) => {
       const token = localStorage.getItem("managerToken");
 
       const res = await axios.post(
-        "https://ems-backend-0xxx.onrender.com/manager/approveLeave",
+        "http://localhost:3000/manager/approveLeave",
         { leaveId },
         {
           headers: {
@@ -43,7 +43,7 @@ const ManagerApproveLeave = ({ allLeave }) => {
       if (!remark) return;
 
       const res = await axios.post(
-        "https://ems-backend-0xxx.onrender.com/manager/rejectLeave",
+        "http://localhost:3000/manager/rejectLeave",
         { leaveId, remark: remark },
         {
           headers: {
